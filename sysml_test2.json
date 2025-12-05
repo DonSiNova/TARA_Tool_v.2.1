@@ -1,0 +1,356 @@
+{
+  "metadata": {
+    "system_name": "MiniBrakeByWireSystem",
+    "description": "Reduced SysML-like system model following exact structure of the provided model, containing only two cybersecurity-relevant assets.",
+    "version": "0.1",
+    "generated": true,
+    "domain": "automotive_braking",
+    "notes": [
+      "This is a shortened version following the exact format of the original model.",
+      "Contains only the essential components needed for a realistic brake-by-wire subsystem."
+    ]
+  },
+
+  "blocks": [
+    {
+      "id": "BLK-VEHICLE",
+      "name": "Vehicle",
+      "stereotype": "System",
+      "description": "Top-level vehicle system containing the simplified brake subsystem.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "brake_torque_output",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-ABS-ECU",
+      "name": "ABS Control Unit",
+      "stereotype": "ECU",
+      "description": "ECU performing simplified ABS control logic using a single wheel speed input.",
+      "attributes": [
+        {
+          "name": "ASIL_level",
+          "type": "string",
+          "value": "C"
+        }
+      ],
+      "ports": [
+        {
+          "name": "ws_fl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "valve_cmd_fl",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        },
+        {
+          "name": "ground",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-ECU-Ground"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WS-FL",
+      "name": "Front Left Wheel Speed Sensor",
+      "stereotype": "Sensor",
+      "description": "Wheel speed sensor for front-left wheel supplying rotational speed to ABS ECU.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "wheel_rotation_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-WheelRotation"
+        },
+        {
+          "name": "ws_signal_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-HCU",
+      "name": "Hydraulic Control Unit",
+      "stereotype": "Component",
+      "description": "Simplified hydraulic modulator that receives a single valve command.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "valve_cmd_fl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "wheel_fl_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WHEEL-FL",
+      "name": "Front Left Wheel Brake Assembly",
+      "stereotype": "Component",
+      "description": "Hydraulic brake caliper for the front-left wheel.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "hydraulic_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "brake_torque_out",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-12V-BATTERY",
+      "name": "12V Battery",
+      "stereotype": "PowerSupply",
+      "description": "Vehicle's 12V power supply unit.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "supply_12v_out",
+          "direction": "out",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        },
+        {
+          "name": "ground",
+          "direction": "out",
+          "type": "electrical",
+          "interface": "IF-ECU-Ground"
+        }
+      ]
+    }
+  ],
+
+  "interfaces": [
+    {
+      "id": "IF-BrakeTorque",
+      "name": "Brake Torque",
+      "type": "mechanical"
+    },
+    {
+      "id": "IF-WheelRotation",
+      "name": "Wheel Rotation",
+           "type": "mechanical"
+    },
+    {
+      "id": "IF-WheelSpeed",
+      "name": "Wheel Speed Signal",
+      "type": "signal"
+    },
+    {
+      "id": "IF-HydraulicLine",
+      "name": "Hydraulic Line",
+      "type": "hydraulic"
+    },
+    {
+      "id": "IF-HydraulicValveCmd",
+      "name": "Hydraulic Valve Command",
+      "type": "signal"
+    },
+    {
+      "id": "IF-12V-Supply",
+      "name": "12V Supply",
+      "type": "electrical"
+    },
+    {
+      "id": "IF-ECU-Ground",
+      "name": "ECU Ground",
+      "type": "electrical"
+    }
+  ],
+
+  "buses": [
+    {
+      "id": "BUS-12V",
+      "name": "12V Supply Rail",
+      "type": "power",
+      "interface": "IF-12V-Supply",
+      "connected_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-WS-FL"
+      ]
+    }
+  ],
+
+  "flows": [
+    {
+      "id": "FLOW-WS-FL-TO-ECU",
+      "name": "FL wheel speed to ABS ECU",
+      "source_block": "BLK-WS-FL",
+      "source_port": "ws_signal_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "ws_fl_in",
+      "interface": "IF-WheelSpeed",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-VALVE-FL",
+      "name": "ABS ECU valve command FL",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "valve_cmd_fl",
+      "target_block": "BLK-HCU",
+      "target_port": "valve_cmd_fl_in",
+      "interface": "IF-HydraulicValveCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-HCU-TO-WHEEL-FL",
+      "name": "Hydraulic pressure to FL wheel",
+      "source_block": "BLK-HCU",
+      "source_port": "wheel_fl_out",
+      "target_block": "BLK-WHEEL-FL",
+      "target_port": "hydraulic_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-WHEEL-FL-TORQUE",
+      "name": "FL brake torque to vehicle",
+      "source_block": "BLK-WHEEL-FL",
+      "source_port": "brake_torque_out",
+      "target_block": "BLK-VEHICLE",
+      "target_port": "brake_torque_output",
+      "interface": "IF-BrakeTorque",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    }
+  ],
+
+  "requirements": [
+    {
+      "id": "REQ-BRAKE-FUNC-01",
+      "text": "The brake subsystem shall modulate wheel braking using wheel speed feedback.",
+      "type": "functional"
+    },
+    {
+      "id": "REQ-BRAKE-CYBER-01",
+      "text": "The ABS Control Unit shall ensure integrity of wheel speed input signals.",
+      "type": "cybersecurity"
+    }
+  ],
+
+  "conformance_notes": [
+    {
+      "id": "CONF-ISO-26262",
+      "standard": "ISO 26262",
+      "applicable_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-HCU"
+      ],
+      "notes": "Safety-related braking components with reduced system scope."
+    },
+    {
+      "id": "CONF-ISO-21434",
+      "standard": "ISO/SAE 21434",
+      "applicable_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-WS-FL"
+      ],
+      "notes": "Cybersecurity-relevant items due to signal integrity and control commands."
+    }
+  ],
+
+  "assets": [
+    {
+      "assetId": "ASSET-ABS-ECU",
+      "itemId": "BLK-ABS-ECU",
+      "type": "ECU",
+      "description": "ABS ECU generating valve commands based on wheel speed input.",
+      "location": "Engine bay",
+      "cyberProperties": [
+        "Integrity",
+        "Availability",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "WheelSpeed",
+          "direction": "in",
+          "exposure": "internal-harness"
+        },
+        {
+          "type": "HydraulicValveCmd",
+          "direction": "out",
+          "exposure": "internal-harness"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "vehicle-internal"
+        }
+      ],
+      "softwareStack": [
+        {
+          "name": "ABS_Control",
+          "version": "1.0",
+          "vendor": "Tier1-Supplier",
+          "category": "Application"
+        }
+      ]
+    },
+    {
+      "assetId": "ASSET-WSS-FL",
+      "itemId": "BLK-WS-FL",
+      "type": "Sensor",
+      "description": "Front-left wheel speed sensor providing rotational speed signals.",
+      "location": "Front-left wheel hub",
+      "cyberProperties": [
+        "Integrity",
+        "Availability"
+      ],
+      "interfaces": [
+        {
+          "type": "WheelSpeed",
+          "direction": "out",
+          "exposure": "chassis-external"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    }
+  ]
+}

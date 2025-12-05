@@ -1,0 +1,1449 @@
+{
+  "metadata": {
+    "system_name": "BrakeByWireSystem",
+    "description": "Logical SysML-like system model of an electro-hydraulic ABS/ESC brake-by-wire system for a passenger vehicle.",
+    "version": "0.3",
+    "generated": true,
+    "domain": "automotive_braking",
+    "notes": [
+      "Generated example, not copied from OEM IP.",
+      "Structured to be used as input to Threat Analysis and Risk Assessment (TARA) tooling.",
+      "Assets section follows Asset_Template.json structure with more realistic cyber properties."
+    ]
+  },
+  "blocks": [
+    {
+      "id": "BLK-VEHICLE",
+      "name": "Vehicle",
+      "stereotype": "System",
+      "description": "Top-level vehicle system containing the brake-by-wire subsystem.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "driver_input",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-DriverBrakeInput"
+        },
+        {
+          "name": "brake_torque_output",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-BRAKE-SYSTEM",
+      "name": "Brake System",
+      "stereotype": "Subsystem",
+      "description": "Electro-hydraulic brake-by-wire system with ABS and ESC functionality.",
+      "attributes": [
+        {
+          "name": "supports_abs",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "name": "supports_esc",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "name": "nominal_supply_voltage_v",
+          "type": "float",
+          "value": 12.0
+        }
+      ],
+      "ports": [
+        {
+          "name": "driver_input",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-DriverBrakeInput"
+        },
+        {
+          "name": "wheel_torque_fl",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        },
+        {
+          "name": "wheel_torque_fr",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        },
+        {
+          "name": "wheel_torque_rl",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        },
+        {
+          "name": "wheel_torque_rr",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        },
+        {
+          "name": "can_pt",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        },
+        {
+          "name": "power_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-BRAKE-PEDAL",
+      "name": "Brake Pedal & HMI",
+      "stereotype": "Component",
+      "description": "Mechanical brake pedal with travel and force sensors and pedal feel simulator.",
+      "attributes": [
+        {
+          "name": "has_travel_sensor",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "name": "has_force_sensor",
+          "type": "boolean",
+          "value": true
+        }
+      ],
+      "ports": [
+        {
+          "name": "mechanical_input",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-DriverBrakeInput"
+        },
+        {
+          "name": "pedal_travel_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-PedalSensor"
+        },
+        {
+          "name": "pedal_force_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-PedalSensor"
+        },
+        {
+          "name": "supply_5v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-ECU-SensorSupply"
+        },
+        {
+          "name": "ground",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-ECU-Ground"
+        }
+      ]
+    },
+    {
+      "id": "BLK-ABS-ECU",
+      "name": "ABS-ESC Control Unit",
+      "stereotype": "ECU",
+      "description": "Electronic Brake Control Module performing ABS, ESC and brake-by-wire logic.",
+      "attributes": [
+        {
+          "name": "ASIL_level",
+          "type": "string",
+          "value": "D"
+        },
+        {
+          "name": "supports_diagnostics",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "name": "has_watchdog",
+          "type": "boolean",
+          "value": true
+        }
+      ],
+      "ports": [
+        {
+          "name": "can_pt",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        },
+        {
+          "name": "diag_can",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-DIAG"
+        },
+        {
+          "name": "ws_fl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "ws_fr_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "ws_rl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "ws_rr_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "pedal_travel_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-PedalSensor"
+        },
+        {
+          "name": "pedal_force_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-PedalSensor"
+        },
+        {
+          "name": "valve_cmd_fl",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_fr",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_rl",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_rr",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "pump_cmd",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-HydraulicPumpCmd"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        },
+        {
+          "name": "ground",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-ECU-Ground"
+        }
+      ]
+    },
+    {
+      "id": "BLK-HCU",
+      "name": "Hydraulic Control Unit",
+      "stereotype": "Component",
+      "description": "Hydraulic modulator with isolation and dump valves and return pump.",
+      "attributes": [
+        {
+          "name": "num_circuits",
+          "type": "integer",
+          "value": 2
+        },
+        {
+          "name": "max_pressure_bar",
+          "type": "float",
+          "value": 200.0
+        }
+      ],
+      "ports": [
+        {
+          "name": "master_cylinder_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "wheel_fl_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "wheel_fr_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "wheel_rl_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "wheel_rr_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "valve_cmd_fl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_fr_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_rl_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "valve_cmd_rr_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicValveCmd"
+        },
+        {
+          "name": "pump_cmd_in",
+          "direction": "in",
+          "type": "signal",
+          "interface": "IF-HydraulicPumpCmd"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-MASTER-CYL",
+      "name": "Master Cylinder & Reservoir",
+      "stereotype": "Component",
+      "description": "Hydraulic pressure generation and fluid storage, includes two circuits (front/rear).",
+      "attributes": [
+        {
+          "name": "num_circuits",
+          "type": "integer",
+          "value": 2
+        }
+      ],
+      "ports": [
+        {
+          "name": "pedal_force_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-DriverBrakeInput"
+        },
+        {
+          "name": "hydraulic_front_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "hydraulic_rear_out",
+          "direction": "out",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WHEEL-FL",
+      "name": "Front Left Wheel Brake Assembly",
+      "stereotype": "Component",
+      "description": "Front left wheel brake caliper and disc.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "hydraulic_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "brake_torque_out",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WHEEL-FR",
+      "name": "Front Right Wheel Brake Assembly",
+      "stereotype": "Component",
+      "description": "Front right wheel brake caliper and disc.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "hydraulic_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "brake_torque_out",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WHEEL-RL",
+      "name": "Rear Left Wheel Brake Assembly",
+      "stereotype": "Component",
+      "description": "Rear left wheel brake caliper and disc.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "hydraulic_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "brake_torque_out",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WHEEL-RR",
+      "name": "Rear Right Wheel Brake Assembly",
+      "stereotype": "Component",
+      "description": "Rear right wheel brake caliper and disc.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "hydraulic_in",
+          "direction": "in",
+          "type": "hydraulic",
+          "interface": "IF-HydraulicLine"
+        },
+        {
+          "name": "brake_torque_out",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-BrakeTorque"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WS-FL",
+      "name": "Front Left Wheel Speed Sensor",
+      "stereotype": "Sensor",
+      "description": "Wheel speed sensor for FL wheel.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "wheel_rotation_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-WheelRotation"
+        },
+        {
+          "name": "ws_signal_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WS-FR",
+      "name": "Front Right Wheel Speed Sensor",
+      "stereotype": "Sensor",
+      "description": "Wheel speed sensor for FR wheel.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "wheel_rotation_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-WheelRotation"
+        },
+        {
+          "name": "ws_signal_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WS-RL",
+      "name": "Rear Left Wheel Speed Sensor",
+      "stereotype": "Sensor",
+      "description": "Wheel speed sensor for RL wheel.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "wheel_rotation_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-WheelRotation"
+        },
+        {
+          "name": "ws_signal_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-WS-RR",
+      "name": "Rear Right Wheel Speed Sensor",
+      "stereotype": "Sensor",
+      "description": "Wheel speed sensor for RR wheel.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "wheel_rotation_in",
+          "direction": "in",
+          "type": "mechanical",
+          "interface": "IF-WheelRotation"
+        },
+        {
+          "name": "ws_signal_out",
+          "direction": "out",
+          "type": "signal",
+          "interface": "IF-WheelSpeed"
+        },
+        {
+          "name": "supply_12v",
+          "direction": "in",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        }
+      ]
+    },
+    {
+      "id": "BLK-12V-BATTERY",
+      "name": "12V Battery",
+      "stereotype": "PowerSupply",
+      "description": "Vehicle low-voltage supply.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "supply_12v_out",
+          "direction": "out",
+          "type": "electrical",
+          "interface": "IF-12V-Supply"
+        },
+        {
+          "name": "ground",
+          "direction": "out",
+          "type": "electrical",
+          "interface": "IF-ECU-Ground"
+        }
+      ]
+    },
+    {
+      "id": "BLK-CAN-PT",
+      "name": "Powertrain CAN Network",
+      "stereotype": "Network",
+      "description": "Powertrain CAN bus for communication between brake ECU and other ECUs.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "can_node1",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        },
+        {
+          "name": "can_node2",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        },
+        {
+          "name": "can_node3",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        }
+      ]
+    },
+    {
+      "id": "BLK-ENGINE-ECU",
+      "name": "Engine Control Unit",
+      "stereotype": "ECU",
+      "description": "Engine ECU providing wheel torque and engine status to brake system, and receiving brake torque requests.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "can_pt",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        }
+      ]
+    },
+    {
+      "id": "BLK-EPB-ECU",
+      "name": "Electronic Parking Brake ECU",
+      "stereotype": "ECU",
+      "description": "Optional ECU controlling electric parking brake actuators.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "can_pt",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-PT"
+        }
+      ]
+    },
+    {
+      "id": "BLK-DIAG-TOOL",
+      "name": "Diagnostic Tester",
+      "stereotype": "ExternalActor",
+      "description": "Off-board diagnostic tester connected via diagnostic CAN.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "diag_can",
+          "direction": "inout",
+          "type": "signal",
+          "interface": "IF-CAN-DIAG"
+        }
+      ]
+    },
+    {
+      "id": "BLK-DRIVER",
+      "name": "Driver",
+      "stereotype": "ExternalActor",
+      "description": "Human driver applying brake demand.",
+      "attributes": [],
+      "ports": [
+        {
+          "name": "brake_pedal_force",
+          "direction": "out",
+          "type": "mechanical",
+          "interface": "IF-DriverBrakeInput"
+        }
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "IF-DriverBrakeInput",
+      "name": "Driver Brake Input",
+      "type": "mechanical"
+    },
+    {
+      "id": "IF-BrakeTorque",
+      "name": "Brake Torque",
+      "type": "mechanical"
+    },
+    {
+      "id": "IF-PedalSensor",
+      "name": "Pedal Sensor Signals",
+      "type": "signal"
+    },
+    {
+      "id": "IF-WheelSpeed",
+      "name": "Wheel Speed Signal",
+      "type": "signal"
+    },
+    {
+      "id": "IF-WheelRotation",
+      "name": "Wheel Rotation",
+      "type": "mechanical"
+    },
+    {
+      "id": "IF-HydraulicLine",
+      "name": "Hydraulic Line",
+      "type": "hydraulic"
+    },
+    {
+      "id": "IF-HydraulicValveCmd",
+      "name": "Hydraulic Valve Command",
+      "type": "signal"
+    },
+    {
+      "id": "IF-HydraulicPumpCmd",
+      "name": "Hydraulic Pump Command",
+      "type": "signal"
+    },
+    {
+      "id": "IF-CAN-PT",
+      "name": "Powertrain CAN",
+      "type": "signal"
+    },
+    {
+      "id": "IF-CAN-DIAG",
+      "name": "Diagnostic CAN",
+      "type": "signal"
+    },
+    {
+      "id": "IF-12V-Supply",
+      "name": "12V Supply",
+      "type": "electrical"
+    },
+    {
+      "id": "IF-ECU-Ground",
+      "name": "ECU Ground",
+      "type": "electrical"
+    },
+    {
+      "id": "IF-ECU-SensorSupply",
+      "name": "Sensor 5V Supply",
+      "type": "electrical"
+    }
+  ],
+  "buses": [
+    {
+      "id": "BUS-CAN-PT",
+      "name": "Powertrain CAN Bus",
+      "type": "communication",
+      "interface": "IF-CAN-PT",
+      "connected_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-ENGINE-ECU",
+        "BLK-EPB-ECU"
+      ]
+    },
+    {
+      "id": "BUS-CAN-DIAG",
+      "name": "Diagnostic CAN Bus",
+      "type": "communication",
+      "interface": "IF-CAN-DIAG",
+      "connected_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-DIAG-TOOL"
+      ]
+    },
+    {
+      "id": "BUS-12V",
+      "name": "12V Supply Rail",
+      "type": "power",
+      "interface": "IF-12V-Supply",
+      "connected_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-HCU",
+        "BLK-WS-FL",
+        "BLK-WS-FR",
+        "BLK-WS-RL",
+        "BLK-WS-RR"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "FLOW-DRIVER-TO-PEDAL",
+      "name": "Driver applies brake pedal",
+      "source_block": "BLK-DRIVER",
+      "source_port": "brake_pedal_force",
+      "target_block": "BLK-BRAKE-PEDAL",
+      "target_port": "mechanical_input",
+      "interface": "IF-DriverBrakeInput",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-PEDAL-SENSORS-TO-ECU",
+      "name": "Pedal travel sensor to ABS ECU",
+      "source_block": "BLK-BRAKE-PEDAL",
+      "source_port": "pedal_travel_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "pedal_travel_in",
+      "interface": "IF-PedalSensor",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-PEDAL-FORCE-TO-ECU",
+      "name": "Pedal force sensor to ABS ECU",
+      "source_block": "BLK-BRAKE-PEDAL",
+      "source_port": "pedal_force_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "pedal_force_in",
+      "interface": "IF-PedalSensor",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-WS-FL-TO-ECU",
+      "name": "FL wheel speed to ABS ECU",
+      "source_block": "BLK-WS-FL",
+      "source_port": "ws_signal_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "ws_fl_in",
+      "interface": "IF-WheelSpeed",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-WS-FR-TO-ECU",
+      "name": "FR wheel speed to ABS ECU",
+      "source_block": "BLK-WS-FR",
+      "source_port": "ws_signal_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "ws_fr_in",
+      "interface": "IF-WheelSpeed",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-WS-RL-TO-ECU",
+      "name": "RL wheel speed to ABS ECU",
+      "source_block": "BLK-WS-RL",
+      "source_port": "ws_signal_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "ws_rl_in",
+      "interface": "IF-WheelSpeed",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-WS-RR-TO-ECU",
+      "name": "RR wheel speed to ABS ECU",
+      "source_block": "BLK-WS-RR",
+      "source_port": "ws_signal_out",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "ws_rr_in",
+      "interface": "IF-WheelSpeed",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-VALVE-FL",
+      "name": "ABS ECU valve command FL",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "valve_cmd_fl",
+      "target_block": "BLK-HCU",
+      "target_port": "valve_cmd_fl_in",
+      "interface": "IF-HydraulicValveCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-VALVE-FR",
+      "name": "ABS ECU valve command FR",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "valve_cmd_fr",
+      "target_block": "BLK-HCU",
+      "target_port": "valve_cmd_fr_in",
+      "interface": "IF-HydraulicValveCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-VALVE-RL",
+      "name": "ABS ECU valve command RL",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "valve_cmd_rl",
+      "target_block": "BLK-HCU",
+      "target_port": "valve_cmd_rl_in",
+      "interface": "IF-HydraulicValveCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-VALVE-RR",
+      "name": "ABS ECU valve command RR",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "valve_cmd_rr",
+      "target_block": "BLK-HCU",
+      "target_port": "valve_cmd_rr_in",
+      "interface": "IF-HydraulicValveCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-ECU-TO-HCU-PUMP",
+      "name": "ABS ECU pump command",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "pump_cmd",
+      "target_block": "BLK-HCU",
+      "target_port": "pump_cmd_in",
+      "interface": "IF-HydraulicPumpCmd",
+      "medium": "electrical",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-MC-TO-HCU-FRONT",
+      "name": "Master cylinder front circuit to HCU",
+      "source_block": "BLK-MASTER-CYL",
+      "source_port": "hydraulic_front_out",
+      "target_block": "BLK-HCU",
+      "target_port": "master_cylinder_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-HCU-TO-WHEEL-FL",
+      "name": "Hydraulic pressure to FL wheel",
+      "source_block": "BLK-HCU",
+      "source_port": "wheel_fl_out",
+      "target_block": "BLK-WHEEL-FL",
+      "target_port": "hydraulic_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-HCU-TO-WHEEL-FR",
+      "name": "Hydraulic pressure to FR wheel",
+      "source_block": "BLK-HCU",
+      "source_port": "wheel_fr_out",
+      "target_block": "BLK-WHEEL-FR",
+      "target_port": "hydraulic_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-HCU-TO-WHEEL-RL",
+      "name": "Hydraulic pressure to RL wheel",
+      "source_block": "BLK-HCU",
+      "source_port": "wheel_rl_out",
+      "target_block": "BLK-WHEEL-RL",
+      "target_port": "hydraulic_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-HCU-TO-WHEEL-RR",
+      "name": "Hydraulic pressure to RR wheel",
+      "source_block": "BLK-HCU",
+      "source_port": "wheel_rr_out",
+      "target_block": "BLK-WHEEL-RR",
+      "target_port": "hydraulic_in",
+      "interface": "IF-HydraulicLine",
+      "medium": "hydraulic",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-WHEEL-FL-TORQUE",
+      "name": "FL brake torque to vehicle",
+      "source_block": "BLK-WHEEL-FL",
+      "source_port": "brake_torque_out",
+      "target_block": "BLK-VEHICLE",
+      "target_port": "brake_torque_output",
+      "interface": "IF-BrakeTorque",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-WHEEL-FR-TORQUE",
+      "name": "FR brake torque to vehicle",
+      "source_block": "BLK-WHEEL-FR",
+      "source_port": "brake_torque_out",
+      "target_block": "BLK-VEHICLE",
+      "target_port": "brake_torque_output",
+      "interface": "IF-BrakeTorque",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-WHEEL-RL-TORQUE",
+      "name": "RL brake torque to vehicle",
+      "source_block": "BLK-WHEEL-RL",
+      "source_port": "brake_torque_out",
+      "target_block": "BLK-VEHICLE",
+      "target_port": "brake_torque_output",
+      "interface": "IF-BrakeTorque",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-WHEEL-RR-TORQUE",
+      "name": "RR brake torque to vehicle",
+      "source_block": "BLK-WHEEL-RR",
+      "source_port": "brake_torque_out",
+      "target_block": "BLK-VEHICLE",
+      "target_port": "brake_torque_output",
+      "interface": "IF-BrakeTorque",
+      "medium": "mechanical",
+      "is_cyber_relevant": false
+    },
+    {
+      "id": "FLOW-CAN-PT-ECU-TO-ENGINE",
+      "name": "Brake torque request to engine ECU",
+      "source_block": "BLK-ABS-ECU",
+      "source_port": "can_pt",
+      "target_block": "BLK-ENGINE-ECU",
+      "target_port": "can_pt",
+      "interface": "IF-CAN-PT",
+      "medium": "CAN",
+      "is_cyber_relevant": true
+    },
+    {
+      "id": "FLOW-DIAG-TO-ABS-ECU",
+      "name": "Diagnostic tool to ABS ECU",
+      "source_block": "BLK-DIAG-TOOL",
+      "source_port": "diag_can",
+      "target_block": "BLK-ABS-ECU",
+      "target_port": "diag_can",
+      "interface": "IF-CAN-DIAG",
+      "medium": "CAN",
+      "is_cyber_relevant": true
+    }
+  ],
+  "requirements": [
+    {
+      "id": "REQ-BRAKE-FUNC-01",
+      "text": "The brake system shall provide controlled wheel braking for all four wheels under all operating conditions.",
+      "type": "functional"
+    },
+    {
+      "id": "REQ-BRAKE-SAF-01",
+      "text": "Loss of wheel braking during normal driving shall have a probability lower than 1E-7 per operating hour.",
+      "type": "safety"
+    },
+    {
+      "id": "REQ-BRAKE-CYBER-01",
+      "text": "The ABS-ESC Control Unit shall authenticate diagnostic sessions before accepting any control commands that can change braking behavior.",
+      "type": "cybersecurity"
+    }
+  ],
+  "conformance_notes": [
+    {
+      "id": "CONF-ISO-26262",
+      "standard": "ISO 26262",
+      "applicable_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-HCU",
+        "BLK-MASTER-CYL"
+      ],
+      "notes": "Safety-related elements for braking function."
+    },
+    {
+      "id": "CONF-ISO-21434",
+      "standard": "ISO/SAE 21434",
+      "applicable_blocks": [
+        "BLK-ABS-ECU",
+        "BLK-CAN-PT",
+        "BLK-DIAG-TOOL"
+      ],
+      "notes": "Cybersecurity-relevant items for TARA (interfaces, ECUs, communication links)."
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "ASSET-ABS-ECU",
+      "itemId": "BLK-ABS-ECU",
+      "type": "ECU",
+      "description": "ABS/ESC ECU executing brake control logic and communicating over CAN.",
+      "location": "Engine bay",
+      "cyberProperties": [
+        "Integrity",
+        "Availability",
+        "Authenticity",
+        "Authorization"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN-PT",
+          "direction": "inout",
+          "exposure": "vehicle-internal"
+        },
+        {
+          "type": "CAN-DIAG",
+          "direction": "inout",
+          "exposure": "external-service-port"
+        },
+        {
+          "type": "Sensor-Analog",
+          "direction": "in",
+          "exposure": "internal-harness"
+        },
+        {
+          "type": "Actuator-Drive",
+          "direction": "out",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": [
+        {
+          "name": "BrakeControl",
+          "version": "3.2",
+          "vendor": "OEM",
+          "category": "Application"
+        },
+        {
+          "name": "AUTOSAR_OS",
+          "version": "4.3",
+          "vendor": "Tier1-Supplier",
+          "category": "OS"
+        },
+        {
+          "name": "UDS_Diagnostics",
+          "version": "2.0",
+          "vendor": "Tier1-Supplier",
+          "category": "Protocol"
+        }
+      ]
+    },
+    {
+      "assetId": "ASSET-ENGINE-ECU",
+      "itemId": "BLK-ENGINE-ECU",
+      "type": "ECU",
+      "description": "Engine ECU exchanging torque and speed messages with the ABS ECU via powertrain CAN.",
+      "location": "Engine bay",
+      "cyberProperties": [
+        "Integrity",
+        "Availability",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN-PT",
+          "direction": "inout",
+          "exposure": "vehicle-internal"
+        }
+      ],
+      "softwareStack": [
+        {
+          "name": "EngineMgmt",
+          "version": "5.1",
+          "vendor": "OEM",
+          "category": "Application"
+        },
+        {
+          "name": "AUTOSAR_OS",
+          "version": "4.2",
+          "vendor": "Tier1-Supplier",
+          "category": "OS"
+        }
+      ]
+    },
+    {
+      "assetId": "ASSET-EPB-ECU",
+      "itemId": "BLK-EPB-ECU",
+      "type": "ECU",
+      "description": "Electric Parking Brake ECU controlling actuator motors and monitoring EPB status.",
+      "location": "Rear axle area",
+      "cyberProperties": [
+        "Integrity",
+        "Availability",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN-PT",
+          "direction": "inout",
+          "exposure": "vehicle-internal"
+        }
+      ],
+      "softwareStack": [
+        {
+          "name": "EPB_Control",
+          "version": "1.8",
+          "vendor": "Tier1-Supplier",
+          "category": "Application"
+        }
+      ]
+    },
+    {
+      "assetId": "ASSET-WSS-FL",
+      "itemId": "BLK-WS-FL",
+      "type": "Sensor",
+      "description": "Front-left wheel speed sensor providing wheel speed to ABS ECU.",
+      "location": "Front left wheel hub",
+      "cyberProperties": [
+        "Integrity",
+        "Availability"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "out",
+          "exposure": "chassis-external"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-WSS-FR",
+      "itemId": "BLK-WS-FR",
+      "type": "Sensor",
+      "description": "Front-right wheel speed sensor providing wheel speed to ABS ECU.",
+      "location": "Front right wheel hub",
+      "cyberProperties": [
+        "Integrity",
+        "Availability"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "out",
+          "exposure": "chassis-external"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-WSS-RL",
+      "itemId": "BLK-WS-RL",
+      "type": "Sensor",
+      "description": "Rear-left wheel speed sensor providing wheel speed to ABS ECU.",
+      "location": "Rear left wheel hub",
+      "cyberProperties": [
+        "Integrity",
+        "Availability"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "out",
+          "exposure": "chassis-external"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-WSS-RR",
+      "itemId": "BLK-WS-RR",
+      "type": "Sensor",
+      "description": "Rear-right wheel speed sensor providing wheel speed to ABS ECU.",
+      "location": "Rear right wheel hub",
+      "cyberProperties": [
+        "Integrity",
+        "Availability"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "out",
+          "exposure": "chassis-external"
+        },
+        {
+          "type": "Power-12V",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-CAN-PT",
+      "itemId": "BLK-CAN-PT",
+      "type": "Network",
+      "description": "Powertrain CAN network used for real-time exchange between ABS ECU, Engine ECU and EPB ECU.",
+      "location": "Vehicle wiring harness (backbone and branches)",
+      "cyberProperties": [
+        "Integrity",
+        "Availability",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN",
+          "direction": "inout",
+          "exposure": "vehicle-internal"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-CAN-DIAG",
+      "itemId": "BUS-CAN-DIAG",
+      "type": "Network",
+      "description": "Diagnostic CAN bus accessible via the OBD-II port for service and flashing.",
+      "location": "OBD-II connector and associated harness",
+      "cyberProperties": [
+        "Integrity",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN",
+          "direction": "inout",
+          "exposure": "external-service-port"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-DIAG-TOOL",
+      "itemId": "BLK-DIAG-TOOL",
+      "type": "ExternalActor",
+      "description": "Off-board diagnostic tester capable of UDS diagnostics and ECU flashing.",
+      "location": "Workshop / service environment",
+      "cyberProperties": [
+        "Authenticity",
+        "Authorization"
+      ],
+      "interfaces": [
+        {
+          "type": "CAN-DIAG",
+          "direction": "inout",
+          "exposure": "external-service-port"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-PEDAL-SIGNAL",
+      "itemId": "FLOW-PEDAL-SENSORS-TO-ECU",
+      "type": "Signal",
+      "description": "Brake pedal sensor signals (travel and force) representing driver brake request.",
+      "location": "Harness between pedal sensors and ABS ECU",
+      "cyberProperties": [
+        "Integrity"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "out",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-WSS-SIGNALS",
+      "itemId": "FLOW-WS-FL-TO-ECU",
+      "type": "Signal",
+      "description": "Wheel speed signals from all four wheel speed sensors as seen at the ABS ECU inputs.",
+      "location": "Chassis and engine-bay wiring harness",
+      "cyberProperties": [
+        "Integrity"
+      ],
+      "interfaces": [
+        {
+          "type": "Sensor-Analog",
+          "direction": "in",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-VALVE-CMD",
+      "itemId": "FLOW-ECU-TO-HCU-VALVE-FL",
+      "type": "Signal",
+      "description": "Hydraulic valve command signals from ABS ECU to HCU valves for all wheels.",
+      "location": "Harness between ABS ECU and Hydraulic Control Unit",
+      "cyberProperties": [
+        "Integrity",
+        "Authenticity"
+      ],
+      "interfaces": [
+        {
+          "type": "ECU-Output",
+          "direction": "out",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-PUMP-CMD",
+      "itemId": "FLOW-ECU-TO-HCU-PUMP",
+      "type": "Signal",
+      "description": "Hydraulic pump command signal from ABS ECU to the HCU pump driver.",
+      "location": "Harness between ABS ECU and HCU",
+      "cyberProperties": [
+        "Integrity"
+      ],
+      "interfaces": [
+        {
+          "type": "ECU-Output",
+          "direction": "out",
+          "exposure": "internal-harness"
+        }
+      ],
+      "softwareStack": []
+    },
+    {
+      "assetId": "ASSET-12V",
+      "itemId": "BLK-12V-BATTERY",
+      "type": "Power",
+      "description": "12V power supply rail feeding ABS ECU, wheel speed sensors and HCU.",
+      "location": "Battery and vehicle power distribution network",
+      "cyberProperties": [
+        "Availability",
+        "Integrity"
+      ],
+      "interfaces": [
+        {
+          "type": "Power-12V",
+          "direction": "out",
+          "exposure": "vehicle-internal"
+        }
+      ],
+      "softwareStack": []
+    }
+  ]
+}

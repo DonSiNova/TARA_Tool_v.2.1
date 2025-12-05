@@ -1,0 +1,5 @@
+2025-12-03 23:42:13 [INFO] AutoTARA - === Stage 1: Asset Extraction ===
+2025-12-03 23:42:13 [INFO] AutoTARA - Stage 1: Asset extraction from SysML (output\uploaded_sysml.json)
+2025-12-03 23:42:29 [INFO] AutoTARA - Asset extraction LLM call completed, output length=9594
+2025-12-03 23:42:30 [INFO] AutoTARA - Stage 1 complete: 15 assets written to output\run_20251203_234213\assets.csv
+2025-12-03 23:42:30 [INFO] AutoTARA - Stage 1 finished.

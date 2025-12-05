@@ -1,0 +1,28 @@
+# Core
+pydantic==2.6.1
+python-dotenv==1.0.1
+
+# OpenAI
+openai==1.12.0
+
+# Vector store support (FAISS or Chroma)
+faiss-cpu
+chromadb==0.4.24
+
+# Streamlit UI
+streamlit==1.32.0
+
+# Utilities
+tqdm==4.66.2
+numpy==1.26.4
+pandas==2.2.1
+
+# React/Tailwind web UI dependencies are managed via npm/yarn.
+
+# Testing
+pytest==8.0.0
+pytest-mock==3.12.0
+
+# Optional security/format tools
+ruff==0.3.0
+black==24.3.0
